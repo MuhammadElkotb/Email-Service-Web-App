@@ -11,12 +11,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.ArrayList;
 
+
 import Controller.SingletonClasses.Handlers.FirstHandler;
 
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class SendEmailPageController {
+
 
     @PostMapping("/sendEmail")
     String sendEmail(@RequestBody Email email){
@@ -31,13 +33,14 @@ public class SendEmailPageController {
     }
 
     @PostMapping("/sendEmailAttachments")
-    void attachment(@RequestParam(value = "email") String email, @RequestParam("file") MultipartFile[] files){
-        try{
+    void attachment(@RequestParam(value = "email") String email, @RequestParam("file") MultipartFile[] files) {
+        try {
             ObjectMapper map = new ObjectMapper();
             EmailI newEmail = map.readValue(email, Email.class);
             newEmail.setAttachments(new ArrayList<Attachment>());
-            if(files != null){
-                for(int i = 0; i < files.length; i++){
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+
                     Attachment attachment = new Attachment();
                     attachment.setEncoded(files[i].getBytes());
                     System.out.println(files[i].getOriginalFilename());
@@ -51,10 +54,8 @@ public class SendEmailPageController {
             }
 
             FirstHandler.getInstance().handle("SendEmail", newEmail, "");
+        } catch (Exception e) {
 
-
-        }
-        catch (Exception e){
             System.out.println(e.getMessage());
         }
     }

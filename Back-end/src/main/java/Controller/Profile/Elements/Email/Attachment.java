@@ -16,7 +16,6 @@ public class Attachment {
         return this.encoded;
     }
 
-
     public String getName() {
         return this.name;
     }

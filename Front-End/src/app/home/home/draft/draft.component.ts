@@ -83,16 +83,17 @@ export class DraftComponent implements OnInit {
     // DraftComponent.listOfEmails.push(y)
     // DraftComponent.listOfEmails.push(Z)
     // DraftComponent.listOfEmails.push(w)
-      this.serveMe1.getDraft(LoginComponent.globalUsername).subscribe((data : EmailI[])=> {
+
+    this.serveMe1.getDraft(LoginComponent.globalUsername).subscribe((data : EmailI[])=> {
       DraftComponent.listOfEmails = data;
-      console.log(DraftComponent.listOfEmails);
+       console.log(DraftComponent.listOfEmails);
 
-      this.listPreSize = this.viewArray.length
-      this.parseArray()
+       this.listPreSize = this.viewArray.length
+       this.parseArray()
 
-      this.place(this.viewArray,this.iterationsNum,this.listPreSize,"Edit")
-      this.listOfButtons = document.querySelectorAll("td  > button")
-      this.checkClick()});
+       this.place(this.viewArray,this.iterationsNum,this.listPreSize,"Edit")
+       this.listOfButtons = document.querySelectorAll("td  > button")
+       this.checkClick()});
 }
 parseArray(){
   this.viewArray = [];
@@ -103,7 +104,6 @@ parseArray(){
     this.viewArray[email][2] = DraftComponent.listOfEmails[email].subject
   }
 }
-
 checkClick(){
   for (var i =  0 ; i < this.listOfButtons.length ; i++){
 
@@ -153,7 +153,6 @@ searchDraft(input : EmailI[]){
     this.viewArray = [];
   }
 
-  this.parseArray();
   this.place(this.viewArray,this.iterationsNum,this.listPreSize);
   this.listOfButtons = document.querySelectorAll("td  > button");
   this.checkClick();

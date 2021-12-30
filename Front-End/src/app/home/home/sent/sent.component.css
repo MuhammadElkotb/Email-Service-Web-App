@@ -30,13 +30,14 @@ button{
   
 
 .email-popup {
+    word-wrap: break-word;
     position:absolute;
-    top: 110px;
-    left:400px;
+    top: 0px;
+    left:300px;
     border: 3px solid #500d0d;
     z-index: 9;
-    width: 700px;
-    height: 450px;
+    width: 1000px;
+    height: 650px;
     background-color: #2D4263;
     font-family: cursive;
     color:rgb(217, 235, 235);
@@ -66,7 +67,7 @@ button{
 }
   
  .message-container {
-    height:60%;
+    height:30%;
 } 
 
 #refresh {

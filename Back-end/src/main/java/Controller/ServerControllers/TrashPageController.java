@@ -8,6 +8,7 @@ import Controller.Profile.Elements.Email.EmailI;
 import Controller.SingletonClasses.Database;
 import Controller.SingletonClasses.Handlers.FifthHandler;
 import Controller.SingletonClasses.Handlers.FirstHandler;
+
 import Controller.Sorter.EmailsSorter;
 import Controller.Sorter.EmailsSorterI;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +79,7 @@ public class TrashPageController {
     @PostMapping("/restore")
     ArrayList<EmailI> restore(@RequestBody Email email){
         try{
+            System.out.println("OWNER CONTOLEER " + email.getOwner());
             FirstHandler.getInstance().handle("Restore", email, "");
             return null;
         }

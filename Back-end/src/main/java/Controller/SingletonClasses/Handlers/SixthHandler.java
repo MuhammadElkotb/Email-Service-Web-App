@@ -24,11 +24,12 @@ public class SixthHandler implements HandlerI{
     public void handle(String concern, EmailI email, String folderName) throws Exception {
         if(concern == this.concern){
             Database database = Database.getInstance();
+
             Deleter.getInstance().deleteEmailDataTrash(email, database.getProfilebyUsername("", email.getOwner()));
             database.getProfilebyUsername("", email.getOwner()).getTrash().removeEmailbyID(email.getEmailID());
 
             if(email.getEmailType().equals("Inbox")){
-                Creator.getInstance().createEmailDataInbox(email, database.getProfilebyUsername("", email.getOwner()), email.getEmailID(), -1);
+                Creator.getInstance().createEmailDataInbox(email, database.getProfilebyUsername("", email.getOwner()), email.getEmailID(), 0);
                 database.getProfilebyUsername("", email.getOwner()).getInbox().addEmail(email);
             }
             if(email.getEmailType().equals("Sent")){

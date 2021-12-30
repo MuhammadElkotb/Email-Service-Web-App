@@ -83,15 +83,17 @@ import { TrashComponent } from '../trash/trash.component';
       // SentComponent.listOfEmails.push(y)
       // SentComponent.listOfEmails.push(Z)
       // SentComponent.listOfEmails.push(w)
-        this.serveMe?.getSent(LoginComponent.globalUsername).subscribe((data : EmailI[])=> {
-        SentComponent.listOfEmails = data;
-        console.log(SentComponent.listOfEmails);
-        this.listPreSize  = this.viewArray.length;
-        this.parseArray();
 
-        this.place(this.viewArray,this.iterationsNum,this.listPreSize);
-        this.listOfButtons = document.querySelectorAll("td  > button");
-        this.checkClick();});
+
+      this.serveMe?.getSent(LoginComponent.globalUsername).subscribe((data : EmailI[])=> {
+          SentComponent.listOfEmails = data;
+          console.log(SentComponent.listOfEmails);
+          this.listPreSize  = this.viewArray.length;
+          this.parseArray();
+
+          this.place(this.viewArray,this.iterationsNum,this.listPreSize);
+          this.listOfButtons = document.querySelectorAll("td  > button");
+          this.checkClick();});
 
   }
   parseArray(){
@@ -166,48 +168,78 @@ searchSent(input : EmailI[]){
       (<HTMLElement>document.getElementById("email-popup")).style.display = "none";
   }
 
-    show(email:EmailI){
-      var contentsToBeDeleted = document.querySelectorAll("div > p");
-      for (var i = 0; i<contentsToBeDeleted.length; i++)
+  show(email:EmailI){
+    var contentsToBeDeleted = document.querySelectorAll("div > p");
+    for (var i = 0; i<contentsToBeDeleted.length; i++)
+    switch(i){
+      case 0 : document.getElementById("sender-container")?.removeChild(document.getElementById("sender-container")?.childNodes[1])
+               break
+      case 1 : document.getElementById("date-container")?.removeChild(document.getElementById("date-container")?.childNodes[1])
+               break
+      case 2 : document.getElementById("subject-container")?.removeChild(document.getElementById("subject-container")?.childNodes[1])
+               break
+      case 3 : document.getElementById("message-container")?.removeChild(document.getElementById("message-container")?.childNodes[1])
+               break
+      case 4 : document.getElementById("attachment-container")?.removeChild(document.getElementById("attachment-container")?.childNodes[1])
+              break;
+            
+    }
+    var emailContents = document.querySelectorAll("div.email-container > div");
+    for (var i = 0; i<emailContents.length; i++){
+      var node = document.createElement("P")
+      node.style.marginTop  = "0"
+      var textNode = document.createTextNode(email.senderUsername)
+      var destinationNode = document.getElementById("sender-container")
       switch(i){
-        case 0 : document.getElementById("sender-container")?.removeChild(document.getElementById("sender-container")?.childNodes[1])
+        case 0 : node.id = "sender"
                 break
-        case 1 : document.getElementById("date-container")?.removeChild(document.getElementById("date-container")?.childNodes[1])
+        case 1 : node.id = "date"
+                textNode = document.createTextNode(email.timeSentString)
+                destinationNode = document.getElementById("date-container")
                 break
-        case 2 : document.getElementById("subject-container")?.removeChild(document.getElementById("subject-container")?.childNodes[1])
+        case 2 : node.id = "subject"
+                textNode = document.createTextNode(email.subject)
+                destinationNode = document.getElementById("subject-container")
                 break
-        case 3 : document.getElementById("message-container")?.removeChild(document.getElementById("message-container")?.childNodes[1])
+        case 3 :
+                node.id = "message"
+                textNode = document.createTextNode(email.body)
+                destinationNode = document.getElementById("message-container")
                 break
+        case 4 : 
+
+                node.id = "attachment"
+                destinationNode = document.getElementById("attachment-container")
+
+                
+                break;
+                
       }
-      var emailContents = document.querySelectorAll("div.email-container > div");
-      for (var i = 0; i<emailContents.length; i++){
-        var node = document.createElement("P")
-        node.style.marginTop  = "0"
-        var textNode = document.createTextNode(email.senderUsername)
-        var destinationNode = document.getElementById("sender-container")
-        switch(i){
-          case 0 : node.id = "sender"
-                  break
-          case 1 : node.id = "date"
-                  textNode = document.createTextNode(email.timeSentString)
-                  destinationNode = document.getElementById("date-container")
-                  break
-          case 2 : node.id = "subject"
-                  textNode = document.createTextNode(email.subject)
-                  destinationNode = document.getElementById("subject-container")
-                  break
-          case 3 : node.id = "message"
-                  textNode = document.createTextNode(email.body)
-                  destinationNode = document.getElementById("message-container")
-                  break
-        }
+      if(i != 4){
         node.appendChild(textNode)
-        destinationNode?.appendChild(node)
-
       }
-      (<HTMLElement>document.getElementById("email-popup")).style.display = "block"
+      else{
+        for(let i = 0; i < email.attachments.length; i++){
+          var a = document.createElement("a");
+          a.href = "data:".concat(email.attachments[i].type).concat(";base64,").concat(email.attachments[i].encoded);
+          a.download = email.attachments[i].name;
+          var btn = document.createElement("button");
+          btn.style.width = "150px";
+          btn.style.height = "40px";
+          btn.style.whiteSpace = "normal";
+          btn.style.wordWrap = "break-word";
+          btn.innerHTML = email.attachments[i].name;
+          a.appendChild(btn);
+          node.appendChild(a)
+        }
+      }
+      destinationNode?.appendChild(node)
 
-  }
+    }
+
+
+    (<HTMLElement>document.getElementById("email-popup")).style.display = "block";
+}
   deleteClicked(e: any){
     try{
       const buttonNum = parseInt(e.target.id)

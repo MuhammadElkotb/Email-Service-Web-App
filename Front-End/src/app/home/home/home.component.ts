@@ -24,6 +24,7 @@ export interface EmailI{
   emailType: string;
   timeSentString: string;
   priority: string;
+  attachments : AttachmentI[]
 }
 
 @Component({

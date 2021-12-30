@@ -24,9 +24,18 @@ public class FifthHandler implements HandlerI{
     @Override
     public void handle(String concern, EmailI email, String folderName) throws Exception {
         if(concern == this.concern){
+
             Database database = Database.getInstance();
-            Deleter.getInstance().deleteEmailDataTrash(email, database.getProfilebyUsername("", email.getOwner()));
-            database.getProfilebyUsername("", email.getOwner()).getTrash().removeEmailbyID(email.getEmailID());
+
+            if(email.getEmailType().equals("Draft")){
+                Deleter.getInstance().deleteEmailDataDraft(email, database.getProfilebyUsername("", email.getOwner()));
+                database.getProfilebyUsername("", email.getOwner()).getDraft().removeEmailbyID(email.getEmailID());
+            }
+            else{
+                Deleter.getInstance().deleteEmailDataTrash(email, database.getProfilebyUsername("", email.getOwner()));
+                database.getProfilebyUsername("", email.getOwner()).getTrash().removeEmailbyID(email.getEmailID());
+            }
+
 
         }else{
             if(this.successor == null){

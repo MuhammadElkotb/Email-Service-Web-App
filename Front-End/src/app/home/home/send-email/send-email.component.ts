@@ -20,20 +20,19 @@ export class SendEmailComponent implements OnInit {
   private listPreSize : number
   private iterationsNum : number
   private emailToBeSent : EmailI
-  private Attachment: AttachmentI
+  private attachments: AttachmentI[]
   private fileObject = new FormData
   private listOfButtons : NodeList
+  private files : File[] = [];
+  private form = new FormData();
+
 
   constructor(private placer : InboxComponent  , private serveMe:SendEmailService, private router:Router) {
     this.listOfReceivers = []
     this.listPreSize = 0
     this.iterationsNum = 2
     this.listOfButtons = document.querySelectorAll("td  > button")
-    this.Attachment = {
-      encoded: "",
-      name: "",
-      type: ""
-    }
+    this.attachments = [],
     this.emailToBeSent  = {
       senderUsername: '',
       timeSentString: '',
@@ -43,7 +42,8 @@ export class SendEmailComponent implements OnInit {
       receiversUsernames: [],
       emailID: '',
       emailType: '',
-      priority: ''
+      priority: '',
+      attachments : []
     }
     HomeComponent.pageIndicator = "Send Email"
   }
@@ -68,8 +68,15 @@ export class SendEmailComponent implements OnInit {
   getAttachment(input : any){
     var files: File[]
     files = input.files
-    for(let i = 0; i <files.length; i++){
-      this.fileObject.append("file", files[i])
+
+    var tempForm = new FormData();
+    for(let i = 0; i < files.length; i++){
+      tempForm.append("file", files[i])
+    }
+    console.log(files)
+    this.form = tempForm;
+    if(files.length == 0){
+      this.form.append("file", null);
     }
 
   }
@@ -90,12 +97,18 @@ export class SendEmailComponent implements OnInit {
     console.log(this.emailToBeSent.senderUsername)
     console.log(this.emailToBeSent.owner)
     console.log(this.emailToBeSent.receiversUsernames)
-   //ATTACHMENT TO DO
+    
+    if(!this.form.get("file")){
+      this.serveMe.sendEmail(this.emailToBeSent).subscribe((data: string)=> {
+        alert(data)
+      })
+      console.log("After Send")
+    }
+    else{
+      this.serveMe.sendEmailAttachments(this.emailToBeSent, this.form).subscribe();
+    }
     console.log("before Send")
-    this.serveMe.sendEmail(this.emailToBeSent).subscribe((data: string)=> {
-      alert(data)
-    })
-    console.log("After Send")
+  
   }
   movetoDraft(){
     var e = (<HTMLSelectElement>document.getElementById("priority_select"))

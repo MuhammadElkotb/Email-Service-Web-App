@@ -23,6 +23,7 @@ public class InboxPageController {
         try{
             FirstHandler.getInstance().handle("MovetoTrash",email, "");
             return null;
+
         }
         catch (Exception e){
             System.out.println(e.getMessage());
